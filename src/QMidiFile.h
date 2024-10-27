@@ -8,6 +8,7 @@
 #include <QString>
 #include <QMap>
 #include <QList>
+#include <QIODevice>
 
 class QMidiEvent
 {
@@ -117,6 +118,7 @@ public:
 
 	void clear();
 	bool load(QString filename);
+	bool load(QIODevice& in);
 	bool save(QString filename);
 
 	QMidiFile* oneTrackPerVoice();

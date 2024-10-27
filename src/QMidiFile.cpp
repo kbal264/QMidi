@@ -572,13 +572,13 @@ quint16 interpret_uint16(unsigned char* buffer)
 {
 	return ((quint16)(buffer[0]) << 8) | (quint16)(buffer[1]);
 }
-quint16 read_uint16(QFile* in)
+quint16 read_uint16(QIODevice* in)
 {
 	unsigned char buffer[2];
 	in->read((char*)buffer, 2);
 	return interpret_uint16(buffer);
 }
-void write_uint16(QFile* out, quint16 value)
+void write_uint16(QIODevice* out, quint16 value)
 {
 	unsigned char buffer[2];
 	buffer[0] = (unsigned char)((value >> 8) & 0xFF);
@@ -586,14 +586,14 @@ void write_uint16(QFile* out, quint16 value)
 	out->write((char*)buffer, 2);
 }
 
-quint32 read_uint32(QFile* in)
+quint32 read_uint32(QIODevice* in)
 {
 	unsigned char buffer[4];
 	in->read((char*)&buffer, 4);
 	return ((quint32)(buffer[0]) << 24) | ((quint32)(buffer[1]) << 16) |
 		   ((quint32)(buffer[2]) << 8) | (quint32)(buffer[3]);
 }
-void write_uint32(QFile* out, quint32 value)
+void write_uint32(QIODevice* out, quint32 value)
 {
 	unsigned char buffer[4];
 	buffer[0] = (unsigned char)(value >> 24);
@@ -603,7 +603,7 @@ void write_uint32(QFile* out, quint32 value)
 	out->write((char*)buffer, 4);
 }
 
-quint32 read_variable_length_quantity(QFile* in)
+quint32 read_variable_length_quantity(QIODevice* in)
 {
 	unsigned char b;
 	quint32 value = 0;
@@ -615,7 +615,7 @@ quint32 read_variable_length_quantity(QFile* in)
 
 	return value;
 }
-void write_variable_length_quantity(QFile* out, quint32 value)
+void write_variable_length_quantity(QIODevice* out, quint32 value)
 {
 	unsigned char buffer[4];
 	int offset = 3;
@@ -641,6 +641,11 @@ bool QMidiFile::load(QString filename)
 	if (!in.exists() || !in.open(QFile::ReadOnly)) {
 		return false;
 	}
+
+	return load(in);
+}
+
+bool QMidiFile::load(QIODevice& in) {
 
 	fDisableSort = true;
 	unsigned char chunk_id[4], division_type_and_resolution[4];

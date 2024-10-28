@@ -635,8 +635,6 @@ void write_variable_length_quantity(QIODevice* out, quint32 value)
 
 bool QMidiFile::load(QString filename)
 {
-	clear();
-
 	QFile in(filename);
 	if (!in.exists() || !in.open(QFile::ReadOnly)) {
 		return false;
@@ -646,6 +644,8 @@ bool QMidiFile::load(QString filename)
 }
 
 bool QMidiFile::load(QIODevice& in) {
+
+    clear();
 
 	fDisableSort = true;
 	unsigned char chunk_id[4], division_type_and_resolution[4];
